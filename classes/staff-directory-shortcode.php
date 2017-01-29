@@ -88,15 +88,21 @@ class Staff_Directory_Shortcode {
     }
 
     static function photo_shortcode(){
-        if(!empty(self::photo_url_shortcode())){
-            return '<img src="' . self::photo_url_shortcode() . '" />';
+        $photo_url = self::photo_url_shortcode();
+        if(!empty($photo_url)){
+            return '<img src="' . $photo_url . '" />';
         } else {
             return "";
         }
     }
 
     static function bio_shortcode(){
-        return get_the_content();
+        // This more or less copies the_content().
+        // Taken straight from https://developer.wordpress.org/reference/functions/the_content/
+        $bio = get_the_content();
+        $bio = apply_filters( 'the_content', $bio );
+        $bio = str_replace( ']]>', ']]&gt;', $bio );
+        return $bio;
     }
 
     static function bio_paragraph_shortcode(){
